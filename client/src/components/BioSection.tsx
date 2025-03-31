@@ -107,9 +107,9 @@ export default function BioSection({ isOpen, onClose }: BioSectionProps) {
                 {/* Interests section */}
                 <div>
                   <h3 className="text-xl font-semibold font-poppins mb-3">Interests</h3>
-                  <div className="flex flex-wrap justify-center gap-2 px-1">
+                  <div className="flex flex-wrap gap-2 px-1">
                     {profile?.interests.map((interest, index) => (
-                      <span key={index} className="px-3 py-1 bg-gray-100 rounded-full text-sm mb-2">
+                      <span key={index} className="px-3 py-1 bg-gray-100 rounded-full text-sm mb-2 ml-0">
                         {interest}
                       </span>
                     ))}
