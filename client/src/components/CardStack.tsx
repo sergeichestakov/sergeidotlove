@@ -72,41 +72,39 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
     }
   };
 
+  // Handles what happens after a swipe (direction is set)
   useEffect(() => {
-    if (direction) {
-      const timer = setTimeout(() => {
-        // Check if we're at the last photo
+    if (!direction) return; // Only run when a direction is set (after swipe)
+    
+    // Short delay to allow the card exit animation to start
+    const timer = setTimeout(() => {
+      // Special case: last photo + swipe right = match!
+      if (currentIndex === photos.length - 1 && direction === 'right') {
+        console.log("Last card swiped right - showing match!");
+        // The card should animate off screen first
+        // Then we show the match animation
+        setShowMatch(true);
+        // Don't increment currentIndex yet - we'll let the match screen close handler do it
+      } 
+      // All other cases: go to next card or end screen
+      else {
         if (currentIndex === photos.length - 1) {
-          // If swiping right on the last card, show match animation
-          if (direction === 'right') {
-            // Set the match as shown
-            setShowMatch(true);
-            
-            // Wait for match animation to be visible before moving to final screen
-            // This longer delay ensures match animation stays visible
-            setTimeout(() => {
-              // Don't move to the next screen yet - the match screen will handle this
-              // The close handler for the match screen will move to photos.length
-              console.log("Match animation shown, waiting for user interaction");
-            }, 300);
-          } else {
-            // If swiping left on the last card, just move to the end screen immediately
-            setCurrentIndex(photos.length);
-          }
+          // Last card swiped left - go to end screen
+          setCurrentIndex(photos.length);
         } else {
-          // Normal increment for photos that aren't the last one
+          // Normal case - go to next card
           setCurrentIndex(prev => prev + 1);
         }
-        
-        // Wait for the transition to complete before allowing next swipe
-        setTimeout(() => {
-          setDirection(null);
-          setIsTransitioning(false);
-        }, 50);
-      }, 300);
+      }
       
-      return () => clearTimeout(timer);
-    }
+      // Reset swipe state with slight delay to allow animations
+      setTimeout(() => {
+        setDirection(null);
+        setIsTransitioning(false);
+      }, 100);
+    }, 300); // Delay matches the card exit animation
+    
+    return () => clearTimeout(timer);
   }, [direction, photos.length, currentIndex]);
 
   const handleSwipeLeft = () => {
@@ -125,26 +123,12 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
       setLastMatchedPhoto(photos[currentIndex]);
     }
     
-    // Special handling for the last card
-    if (currentIndex === photos.length - 1) {
-      console.log("Last card, showing match immediately");
-      setDirection("right");
-      setExitX(200);
-      setIsTransitioning(true);
-      
-      // For the last card, show the match animation immediately
-      // This ensures it's visible before moving to completion screen
-      const timer = setTimeout(() => {
-        setShowMatch(true);
-      }, 300);
-      
-      return () => clearTimeout(timer);
-    } else {
-      // Normal swiping for other cards
-      setDirection("right");
-      setExitX(200);
-      setIsTransitioning(true);
-    }
+    // Set common swipe states regardless of index
+    setDirection("right");
+    setExitX(200);
+    setIsTransitioning(true);
+    
+    // Only show match on the last card, but we'll handle this in the useEffect
   };
 
   const handleRestart = () => {
@@ -173,8 +157,26 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
   // Only show the next card preview if we're not in a transition
   const nextIndex = !isTransitioning && currentIndex + 1 < photos.length ? currentIndex + 1 : null;
 
+  // Test/debug function to directly show the match animation
+  const handleTestMatch = () => {
+    if (photos.length > 0) {
+      console.log("Showing test match");
+      // Use last photo for testing
+      setLastMatchedPhoto(photos[photos.length - 1]);
+      setShowMatch(true);
+    }
+  };
+
   return (
     <div className="flex-1 flex flex-col items-center justify-start pt-4 pb-20 px-4 relative overflow-hidden">
+      {/* Debug button - always visible for now */}
+      <button 
+        onClick={handleTestMatch}
+        className="absolute top-0 right-0 m-2 bg-gray-800 text-white text-xs px-2 py-1 rounded z-30 opacity-30 hover:opacity-100"
+      >
+        Test Match
+      </button>
+      
       {/* Match Animation */}
       <MatchAnimation 
         isVisible={showMatch} 
