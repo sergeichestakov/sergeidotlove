@@ -18,7 +18,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/profile', async (req, res) => {
     try {
       const profile = await storage.getProfile();
-      res.json(profile);
+      
+      // Ensure birthdate is sent to client as a proper string
+      // that can be converted to a Date object on the client side
+      const profileWithDateString = {
+        ...profile,
+        birthdate: profile.birthdate ? profile.birthdate.toString() : null
+      };
+      
+      res.json(profileWithDateString);
     } catch (error) {
       console.error('Error fetching profile:', error);
       res.status(500).json({ message: 'Failed to fetch profile' });

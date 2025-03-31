@@ -1,9 +1,14 @@
 import { Profile } from '@/types';
+import { calculateAge } from '@/lib/utils';
+
+// Define birthdate: May 10, 1998 2:00pm UTC
+export const BIRTHDATE = new Date(Date.UTC(1998, 4, 10, 14, 0, 0)); // Note: Month is 0-indexed (4 = May)
 
 export const profileData: Profile = {
   id: 1,
   name: "Sergei",
-  age: 32,
+  birthdate: BIRTHDATE,
+  age: calculateAge(BIRTHDATE), // Dynamically calculated
   profession: "Software Engineer & Designer",
   bio: "Hey there! I'm Sergei, a passionate software engineer and designer with a love for creating beautiful digital experiences. When I'm not coding, you'll find me hiking in the mountains, experimenting with photography, or trying out new coffee shops around the city. I believe in building products that make a positive impact and create meaningful connections.",
   interests: [

@@ -43,6 +43,7 @@ export type Photo = typeof photos.$inferSelect;
 export const profiles = pgTable("profiles", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
+  birthdate: text("birthdate").notNull(), // Store as ISO string
   age: integer("age").notNull(),
   profession: text("profession").notNull(),
   bio: text("bio").notNull(),
@@ -52,6 +53,7 @@ export const profiles = pgTable("profiles", {
 
 export const insertProfileSchema = createInsertSchema(profiles).pick({
   name: true,
+  birthdate: true,
   age: true,
   profession: true,
   bio: true,

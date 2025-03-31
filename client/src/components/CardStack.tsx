@@ -97,7 +97,7 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
             )}
             
             {/* Swipe buttons */}
-            <div className="swipe-buttons absolute -bottom-20 left-0 right-0 flex justify-center items-center space-x-4 z-10">
+            <div className="swipe-buttons absolute -bottom-28 left-0 right-0 flex justify-center items-center space-x-4 z-10 mt-8">
               <button 
                 onClick={handleSwipeLeft}
                 className="w-14 h-14 flex items-center justify-center bg-white text-destructive rounded-full shadow-lg hover:bg-destructive hover:text-white transition-colors"

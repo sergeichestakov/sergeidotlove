@@ -17,6 +17,7 @@ export interface SocialLink {
 export interface Profile {
   id: number;
   name: string;
+  birthdate: Date;
   age: number;
   profession: string;
   bio: string;

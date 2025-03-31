@@ -62,6 +62,17 @@ export default function BioSection({ isOpen, onClose }: BioSectionProps) {
               </div>
             ) : (
               <div className="p-6 overflow-y-auto max-h-[70vh]">
+                {/* Profile Info */}
+                <div className="flex items-center gap-4 mb-6">
+                  <div>
+                    <h3 className="text-2xl font-bold">{profile?.name}, {profile?.age}</h3>
+                    <p className="text-gray-600">{profile?.profession}</p>
+                    <p className="text-gray-500 text-sm mt-1">
+                      Born on {profile?.birthdate && new Date(profile.birthdate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                    </p>
+                  </div>
+                </div>
+                
                 {/* Bio content */}
                 <div className="mb-6">
                   <h3 className="text-xl font-semibold font-poppins mb-3">About Me</h3>
