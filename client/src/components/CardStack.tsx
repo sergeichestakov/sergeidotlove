@@ -51,40 +51,16 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
     prevIndexRef.current = currentIndex;
   }, [currentIndex]);
 
-  // Simplified: Handle card being dragged and released
+  // Handle card being dragged and released
   const handleDragEnd = (_e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     if (isTransitioning) return; // Prevent multiple transitions
 
     if (info.offset.x > 100) {
-      // Swiped right
-      if (currentIndex === photos.length - 1) {
-        // Last card - trigger match directly
-        console.log("Last card swiped right via DRAG - showing match!");
-        if (photos[currentIndex]) {
-          setLastMatchedPhoto(photos[currentIndex]);
-        }
-        
-        // Apply animation first (extra large for dramatic effect)
-        setExitX(1000); 
-        setIsTransitioning(true);
-        
-        // Wait a moment for card animation, then show match
-        setTimeout(() => {
-          setShowMatch(true); // Show match animation
-          setCurrentIndex(photos.length); // Move to end screen behind the scenes
-          setIsTransitioning(false);
-        }, 300);
-      } else {
-        // Normal right swipe
-        setDirection("right");
-        setExitX(200);
-        setIsTransitioning(true);
-      }
+      // Swiped right - trigger the same logic as the like button
+      handleSwipeRight();
     } else if (info.offset.x < -100) {
-      // Swiped left
-      setDirection("left");
-      setExitX(-200);
-      setIsTransitioning(true);
+      // Swiped left - trigger the same logic as the X button
+      handleSwipeLeft();
     }
   };
 
@@ -224,8 +200,27 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
                 dragElastic={0.9}
                 onDragEnd={handleDragEnd}
                 whileDrag={{ scale: 1.05 }}
+                onDrag={(_, info) => {
+                  // Update drag state for the badges in PhotoCard
+                  const currentCard = document.querySelector('.current-card');
+                  if (currentCard) {
+                    // Set custom attribute to communicate drag amount to PhotoCard
+                    currentCard.setAttribute('data-drag-x', info.offset.x.toString());
+                    
+                    // Show like/nope badges based on drag direction
+                    if (info.offset.x > 50) {
+                      currentCard.classList.add('drag-right');
+                      currentCard.classList.remove('drag-left');
+                    } else if (info.offset.x < -50) {
+                      currentCard.classList.add('drag-left');
+                      currentCard.classList.remove('drag-right');
+                    } else {
+                      currentCard.classList.remove('drag-right', 'drag-left');
+                    }
+                  }
+                }}
               >
-                <PhotoCard photo={photos[currentIndex]} />
+                <PhotoCard photo={photos[currentIndex]} className="current-card" />
               </motion.div>
             </AnimatePresence>
             

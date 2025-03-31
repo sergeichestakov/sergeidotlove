@@ -5,9 +5,10 @@ import { Photo } from '@/types';
 interface PhotoCardProps {
   photo: Photo;
   disabled?: boolean;
+  className?: string;
 }
 
-export default function PhotoCard({ photo, disabled = false }: PhotoCardProps) {
+export default function PhotoCard({ photo, disabled = false, className = '' }: PhotoCardProps) {
   const [dragAmount, setDragAmount] = useState({ x: 0, y: 0 });
   const [imageLoaded, setImageLoaded] = useState(false);
   
@@ -32,8 +33,52 @@ export default function PhotoCard({ photo, disabled = false }: PhotoCardProps) {
     }
   }, [photo.src]);
 
+  // Watch for CSS class changes on drag
+  useEffect(() => {
+    if (!className.includes('current-card')) return;
+    
+    const element = document.querySelector(`.${className}`);
+    if (!element) return;
+    
+    // Setup mutation observer to watch for class changes
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'class') {
+          const newClasses = (mutation.target as HTMLElement).className;
+          // Update the badges based on drag direction classes
+          if (newClasses.includes('drag-right')) {
+            setDragAmount({ x: 100, y: 0 });
+          } else if (newClasses.includes('drag-left')) {
+            setDragAmount({ x: -100, y: 0 });
+          } else {
+            setDragAmount({ x: 0, y: 0 });
+          }
+        }
+      });
+    });
+    
+    observer.observe(element, { attributes: true });
+    
+    // Also watch for data-drag-x attribute changes
+    const dragObserver = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'data-drag-x') {
+          const dragX = parseFloat((mutation.target as HTMLElement).getAttribute('data-drag-x') || '0');
+          setDragAmount({ x: dragX, y: 0 });
+        }
+      });
+    });
+    
+    dragObserver.observe(element, { attributes: true });
+    
+    return () => {
+      observer.disconnect();
+      dragObserver.disconnect();
+    };
+  }, [className]);
+
   return (
-    <div className="bg-white rounded-2xl shadow-lg overflow-hidden select-none">
+    <div className={`bg-white rounded-2xl shadow-lg overflow-hidden select-none ${className}`}>
       <div className="relative pb-[140%]">
         {/* Show a skeleton loader while image is loading */}
         {!imageLoaded && (
