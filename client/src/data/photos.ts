@@ -1,4 +1,9 @@
 import { Photo } from '@/types';
+import { calculateAge } from '@/lib/utils';
+import { BIRTHDATE } from './profile';
+
+// Calculate the correct age
+const currentAge = calculateAge(BIRTHDATE);
 
 export const stockPhotos: Photo[] = [
   // Portrait photos
@@ -8,7 +13,7 @@ export const stockPhotos: Photo[] = [
     alt: "Portrait photo of man",
     type: "portrait",
     name: "Sergei",
-    age: 32,
+    age: currentAge,
     profession: "Software Engineer & Designer"
   },
   {
@@ -17,7 +22,7 @@ export const stockPhotos: Photo[] = [
     alt: "Portrait photo of man",
     type: "portrait",
     name: "Sergei",
-    age: 32,
+    age: currentAge,
     profession: "Software Engineer & Designer"
   },
   {
@@ -26,7 +31,7 @@ export const stockPhotos: Photo[] = [
     alt: "Portrait photo of man",
     type: "portrait",
     name: "Sergei",
-    age: 32,
+    age: currentAge,
     profession: "Software Engineer & Designer"
   },
   {
@@ -35,7 +40,7 @@ export const stockPhotos: Photo[] = [
     alt: "Portrait photo of man",
     type: "portrait",
     name: "Sergei",
-    age: 32,
+    age: currentAge,
     profession: "Software Engineer & Designer"
   },
   {
@@ -44,7 +49,7 @@ export const stockPhotos: Photo[] = [
     alt: "Portrait photo of man",
     type: "portrait",
     name: "Sergei",
-    age: 32,
+    age: currentAge,
     profession: "Software Engineer & Designer"
   },
   {
@@ -53,7 +58,7 @@ export const stockPhotos: Photo[] = [
     alt: "Portrait photo of man",
     type: "portrait",
     name: "Sergei",
-    age: 32,
+    age: currentAge,
     profession: "Software Engineer & Designer"
   },
   {
@@ -62,7 +67,7 @@ export const stockPhotos: Photo[] = [
     alt: "Portrait photo of man",
     type: "portrait",
     name: "Sergei",
-    age: 32,
+    age: currentAge,
     profession: "Software Engineer & Designer"
   },
   {
@@ -71,7 +76,7 @@ export const stockPhotos: Photo[] = [
     alt: "Portrait photo of man",
     type: "portrait",
     name: "Sergei",
-    age: 32,
+    age: currentAge,
     profession: "Software Engineer & Designer"
   },
 
@@ -82,7 +87,7 @@ export const stockPhotos: Photo[] = [
     alt: "Casual photo of man",
     type: "casual",
     name: "Sergei",
-    age: 32,
+    age: currentAge,
     profession: "Software Engineer & Coffee Enthusiast"
   },
   {
@@ -91,7 +96,7 @@ export const stockPhotos: Photo[] = [
     alt: "Casual photo of man",
     type: "casual",
     name: "Sergei",
-    age: 32,
+    age: currentAge,
     profession: "Software Engineer & Coffee Enthusiast"
   },
   {
@@ -100,7 +105,7 @@ export const stockPhotos: Photo[] = [
     alt: "Casual photo of man",
     type: "casual",
     name: "Sergei",
-    age: 32,
+    age: currentAge,
     profession: "Software Engineer & Traveler"
   },
   {
@@ -109,7 +114,7 @@ export const stockPhotos: Photo[] = [
     alt: "Casual photo of man",
     type: "casual",
     name: "Sergei",
-    age: 32,
+    age: currentAge,
     profession: "Software Engineer & Traveler"
   },
   {
@@ -118,7 +123,7 @@ export const stockPhotos: Photo[] = [
     alt: "Casual photo of man",
     type: "casual",
     name: "Sergei",
-    age: 32,
+    age: currentAge,
     profession: "Software Engineer & Hiker"
   },
   {
@@ -127,7 +132,7 @@ export const stockPhotos: Photo[] = [
     alt: "Casual photo of man",
     type: "casual",
     name: "Sergei",
-    age: 32,
+    age: currentAge,
     profession: "Software Engineer & Photographer"
   },
 
@@ -138,7 +143,7 @@ export const stockPhotos: Photo[] = [
     alt: "Professional photo of man",
     type: "professional",
     name: "Sergei",
-    age: 32,
+    age: currentAge,
     profession: "Tech Lead & Public Speaker"
   },
   {
@@ -147,7 +152,7 @@ export const stockPhotos: Photo[] = [
     alt: "Professional photo of man",
     type: "professional",
     name: "Sergei",
-    age: 32,
+    age: currentAge,
     profession: "Tech Lead & Public Speaker"
   },
   {
@@ -156,7 +161,7 @@ export const stockPhotos: Photo[] = [
     alt: "Professional photo of man",
     type: "professional",
     name: "Sergei",
-    age: 32,
+    age: currentAge,
     profession: "Tech Lead & Public Speaker"
   },
   {
@@ -165,7 +170,7 @@ export const stockPhotos: Photo[] = [
     alt: "Professional photo of man",
     type: "professional",
     name: "Sergei",
-    age: 32,
+    age: currentAge,
     profession: "Tech Lead & Public Speaker"
   }
 ];
