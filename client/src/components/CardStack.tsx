@@ -161,7 +161,7 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
 
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-start pt-4 pb-20 px-4 relative overflow-hidden">
+    <div className="flex-1 flex flex-col items-center justify-start pt-4 pb-24 px-4 relative overflow-hidden">
       {/* Match Animation */}
       <MatchAnimation 
         isVisible={showMatch} 
@@ -169,7 +169,7 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
         matchedPhoto={lastMatchedPhoto} 
       />
       
-      <div className="w-full max-w-sm relative h-[500px]">
+      <div className="w-full max-w-sm relative h-[calc(100vh-180px)] max-h-[500px]">
         {currentIndex < photos.length ? (
           <>
             {/* Next card (background preview) - only show when not transitioning */}
@@ -224,8 +224,25 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
               </motion.div>
             </AnimatePresence>
             
-            {/* Swipe buttons */}
-            <div className="swipe-buttons absolute -bottom-32 left-0 right-0 flex justify-center items-center space-x-4 z-10 mt-8">
+            {/* Photo indicators - Moved above the buttons */}
+            <div className="absolute bottom-3 left-0 right-0 z-30">
+              <div className="photo-indicators flex items-center justify-center space-x-1 mb-4">
+                {photos.map((_, index) => (
+                  <div 
+                    key={index}
+                    className={cn(
+                      "photo-indicator h-1 rounded-full transition-all duration-300",
+                      index === currentIndex 
+                        ? "bg-primary w-8" 
+                        : "bg-gray-300 w-4"
+                    )}
+                  />
+                ))}
+              </div>
+            </div>
+            
+            {/* Swipe buttons - Adjusted for better positioning on mobile */}
+            <div className="swipe-buttons absolute -bottom-16 left-0 right-0 flex justify-center items-center space-x-6 z-10">
               <button 
                 onClick={handleSwipeLeft}
                 disabled={isTransitioning}
@@ -246,23 +263,6 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
               </button>
-            </div>
-            
-            {/* Photo indicators */}
-            <div className="absolute -bottom-12 left-0 right-0 z-30">
-              <div className="photo-indicators flex items-center justify-center space-x-1 my-4">
-                {photos.map((_, index) => (
-                  <div 
-                    key={index}
-                    className={cn(
-                      "photo-indicator h-1 rounded-full transition-all duration-300",
-                      index === currentIndex 
-                        ? "bg-primary w-8" 
-                        : "bg-gray-300 w-4"
-                    )}
-                  />
-                ))}
-              </div>
             </div>
           </>
         ) : (
