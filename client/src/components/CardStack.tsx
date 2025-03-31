@@ -143,7 +143,7 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
 
   if (isLoading || !imagesPreloaded) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-start pt-4 pb-20 px-4 relative overflow-hidden">
+      <div className="flex-1 flex flex-col items-center justify-start pb-20 px-4 relative overflow-hidden">
         <div className="w-full max-w-sm h-[500px] bg-white/10 rounded-2xl animate-pulse"></div>
       </div>
     );
@@ -161,7 +161,7 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
 
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-start pt-2 pb-16 sm:pt-4 sm:pb-20 px-4 relative overflow-hidden">
+    <div className="flex-1 flex flex-col items-center justify-start pb-16 sm:pb-20 px-4 relative overflow-hidden">
       {/* Match Animation */}
       <MatchAnimation 
         isVisible={showMatch} 
