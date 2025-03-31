@@ -81,9 +81,14 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
       // Special case: last photo + swipe right = match!
       if (currentIndex === photos.length - 1 && direction === 'right') {
         console.log("Last card swiped right - showing match!");
-        // The card should animate off screen first
-        // Then we show the match animation
-        setShowMatch(true);
+        // Ensure we have a photo to show in the match screen
+        if (photos[currentIndex]) {
+          setLastMatchedPhoto(photos[currentIndex]);
+        }
+        // Show match after a slight delay to allow exit animation
+        setTimeout(() => {
+          setShowMatch(true);
+        }, 300);
         // Don't increment currentIndex yet - we'll let the match screen close handler do it
       } 
       // All other cases: go to next card or end screen
@@ -161,15 +166,25 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
   const handleTestMatch = () => {
     if (photos.length > 0) {
       console.log("Showing test match");
-      // Use last photo for testing
-      setLastMatchedPhoto(photos[photos.length - 1]);
+      // Use current photo or first photo as fallback
+      const photoToShow = currentIndex < photos.length 
+        ? photos[currentIndex] 
+        : photos[0];
+      
+      setLastMatchedPhoto(photoToShow);
       setShowMatch(true);
     }
   };
 
   return (
     <div className="flex-1 flex flex-col items-center justify-start pt-4 pb-20 px-4 relative overflow-hidden">
-      {/* No debug button in production */}
+      {/* Temporary debug button for testing */}
+      <button 
+        onClick={handleTestMatch}
+        className="absolute bottom-0 right-0 m-2 bg-red-600 text-white text-xs px-2 py-1 rounded z-50 opacity-90 hover:opacity-100"
+      >
+        TEST MATCH
+      </button>
       
       {/* Match Animation */}
       <MatchAnimation 
