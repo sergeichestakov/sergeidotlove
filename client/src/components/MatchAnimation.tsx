@@ -87,24 +87,12 @@ export default function MatchAnimation({ isVisible, onClose, matchedPhoto }: Mat
               transition={{ duration: 0.6, delay: 0.3 }}
               className="mb-4"
             >
-              <motion.h2 
+              <h2 
                 className="text-white text-5xl font-bold tracking-tight mb-2"
-                animate={{ 
-                  scale: [1, 1.05, 1],
-                  textShadow: [
-                    "0 0 5px rgba(255,255,255,0.5)",
-                    "0 0 15px rgba(255,255,255,0.8)",
-                    "0 0 5px rgba(255,255,255,0.5)"
-                  ]
-                }}
-                transition={{ 
-                  duration: 1.5, 
-                  repeat: Infinity,
-                  repeatType: "reverse" 
-                }}
+                style={{ textShadow: "0 0 10px rgba(255,255,255,0.6)" }}
               >
                 IT'S A MATCH!
-              </motion.h2>
+              </h2>
               <div className="h-0.5 w-32 bg-white/50 mx-auto"></div>
             </motion.div>
             
@@ -180,14 +168,6 @@ export default function MatchAnimation({ isVisible, onClose, matchedPhoto }: Mat
                   boxShadow: "0px 8px 15px rgba(0, 0, 0, 0.2)"
                 }}
                 whileTap={{ scale: 0.95 }}
-                animate={{
-                  y: [0, -3, 0],
-                }}
-                transition={{
-                  duration: 1.5,
-                  repeat: Infinity,
-                  repeatType: "reverse"
-                }}
               >
                 KEEP SWIPING
               </motion.button>
