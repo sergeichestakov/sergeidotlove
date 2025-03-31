@@ -225,7 +225,7 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
             </AnimatePresence>
             
             {/* Swipe buttons */}
-            <div className="swipe-buttons absolute -bottom-20 sm:-bottom-32 left-0 right-0 flex justify-center items-center space-x-3 sm:space-x-4 z-10">
+            <div className="swipe-buttons absolute -bottom-24 sm:-bottom-32 left-0 right-0 flex justify-center items-center space-x-3 sm:space-x-4 z-10">
               <button 
                 onClick={handleSwipeLeft}
                 disabled={isTransitioning}
@@ -248,9 +248,9 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
               </button>
             </div>
             
-            {/* Photo indicators - now positioned at bottom of the photo card */}
-            <div className="absolute bottom-2 left-0 right-0 z-30">
-              <div className="photo-indicators flex items-center justify-center space-x-1 my-1">
+            {/* Photo indicators - positioned directly after the description */}
+            <div className="absolute bottom-0 left-0 right-0 z-30 mb-1">
+              <div className="photo-indicators flex items-center justify-center space-x-1 mt-8 mb-1">
                 {photos.map((_, index) => (
                   <div 
                     key={index}

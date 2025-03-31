@@ -116,9 +116,9 @@ export default function PhotoCard({ photo, disabled = false, className = '' }: P
         </motion.div>
         
         {/* Photo info */}
-        <div className="absolute bottom-0 left-0 w-full p-4 text-white">
-          <h2 className="text-2xl font-bold font-poppins">{photo.name}, {photo.age}</h2>
-          <p className="text-sm opacity-90">{photo.profession}</p>
+        <div className="absolute bottom-4 left-0 w-full px-4 text-white">
+          <h2 className="text-2xl font-bold font-poppins mb-1">{photo.name}, {photo.age}</h2>
+          <p className="text-sm opacity-90 mb-3">{photo.profession}</p>
         </div>
       </div>
     </div>
