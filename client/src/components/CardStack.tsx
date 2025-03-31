@@ -169,13 +169,7 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
 
   return (
     <div className="flex-1 flex flex-col items-center justify-start pt-4 pb-20 px-4 relative overflow-hidden">
-      {/* Debug button - always visible for now */}
-      <button 
-        onClick={handleTestMatch}
-        className="absolute top-0 right-0 m-2 bg-gray-800 text-white text-xs px-2 py-1 rounded z-30 opacity-30 hover:opacity-100"
-      >
-        Test Match
-      </button>
+      {/* No debug button in production */}
       
       {/* Match Animation */}
       <MatchAnimation 
