@@ -64,7 +64,14 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
       setExitX(200);
       setIsTransitioning(true);
       
-      // Match is handled in useEffect
+      // Special case: immediately trigger match if this is the last card and swiped right
+      if (currentIndex === photos.length - 1) {
+        console.log("Last card drag-swiped right - showing match!");
+        // Short delay to let the card animate out first
+        setTimeout(() => {
+          setShowMatch(true);
+        }, 300);
+      }
     } else if (info.offset.x < -100) {
       setDirection("left");
       setExitX(-200);
