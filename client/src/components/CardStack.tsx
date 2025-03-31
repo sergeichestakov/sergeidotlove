@@ -31,15 +31,7 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
       setDirection("right");
       setExitX(200);
       
-      // 30% chance of match when swiping right
-      const isMatch = Math.random() < 0.3;
-      
-      // If it's the last card or a random match, show the match animation after a short delay
-      if (currentIndex === photos.length - 1 || isMatch) {
-        setTimeout(() => {
-          setShowMatch(true);
-        }, 500);
-      }
+      // Match is handled in useEffect
     } else if (info.offset.x < -100) {
       setDirection("left");
       setExitX(-200);
@@ -49,14 +41,17 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
   useEffect(() => {
     if (direction) {
       const timer = setTimeout(() => {
-        // Check if we're at the last photo and swiping right
-        if (currentIndex === photos.length - 1 && direction === 'right') {
-          // Set the index but also show "It's a Match!" animation
+        // Check if we're at the last photo
+        if (currentIndex === photos.length - 1) {
+          // If swiping right, show a match
+          if (direction === 'right') {
+            setShowMatch(true);
+          }
+          // In either case, set the index to the end to show the completion screen
           setCurrentIndex(photos.length);
-          // We don't need to set showMatch here since it's already done in the swipe handlers
         } else {
-          // Normal cycling through photos
-          setCurrentIndex((prev) => (prev + 1) % photos.length);
+          // Normal increment for other photos
+          setCurrentIndex(prev => prev + 1);
         }
         setDirection(null);
       }, 300);
@@ -78,15 +73,8 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
     setDirection("right");
     setExitX(200);
     
-    // 30% chance of match when swiping right
-    const isMatch = Math.random() < 0.3;
-    
-    // If it's the last card or a random match, show the match animation after a short delay
-    if (currentIndex === photos.length - 1 || isMatch) {
-      setTimeout(() => {
-        setShowMatch(true);
-      }, 500);
-    }
+    // Only show match on the last card
+    // The match is shown in useEffect after the card transition
   };
 
   const handleRestart = () => {
@@ -103,6 +91,8 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
 
   const handleCloseMatch = () => {
     setShowMatch(false);
+    // Make sure we stay on the "That's all for now!" screen
+    setCurrentIndex(photos.length);
   };
 
   return (
