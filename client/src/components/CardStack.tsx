@@ -20,6 +20,27 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
   const [exitX, setExitX] = useState<number>(0);
   const [showMatch, setShowMatch] = useState(false);
   const [lastMatchedPhoto, setLastMatchedPhoto] = useState<Photo | null>(null);
+  const [imagesPreloaded, setImagesPreloaded] = useState(false);
+
+  // Preload all images on component mount
+  useEffect(() => {
+    if (photos.length > 0 && !imagesPreloaded) {
+      // Create an array to track loaded images
+      const imagePromises = photos.map((photo) => {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.onload = () => resolve(true);
+          img.onerror = () => resolve(false);
+          img.src = photo.src;
+        });
+      });
+
+      // When all images are loaded, update state
+      Promise.all(imagePromises).then(() => {
+        setImagesPreloaded(true);
+      });
+    }
+  }, [photos, imagesPreloaded]);
 
   const handleDragEnd = (_e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     if (info.offset.x > 100) {
@@ -85,7 +106,7 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
     setExitX(0);
   };
 
-  if (isLoading) {
+  if (isLoading || !imagesPreloaded) {
     return (
       <div className="flex-1 flex flex-col items-center justify-start pt-4 pb-20 px-4 relative overflow-hidden">
         <div className="w-full max-w-sm h-[500px] bg-white/10 rounded-2xl animate-pulse"></div>
@@ -99,6 +120,9 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
     setCurrentIndex(photos.length);
   };
 
+  // Calculate the next card index (for preview)
+  const nextIndex = currentIndex + 1 < photos.length ? currentIndex + 1 : null;
+
   return (
     <div className="flex-1 flex flex-col items-center justify-start pt-4 pb-20 px-4 relative overflow-hidden">
       {/* Match Animation */}
@@ -111,12 +135,19 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
       <div className="w-full max-w-sm relative h-[500px]">
         {currentIndex < photos.length ? (
           <>
-            {/* Single card with exit animation */}
+            {/* Next card (background preview) */}
+            {nextIndex !== null && (
+              <div className="absolute top-0 left-0 w-full scale-[0.92] -z-10 opacity-60">
+                <PhotoCard photo={photos[nextIndex]} disabled={true} />
+              </div>
+            )}
+            
+            {/* Current card with exit animation */}
             <AnimatePresence initial={false} mode="wait">
               <motion.div 
                 key={currentIndex}
-                className="absolute top-0 left-0 w-full"
-                initial={{ scale: 0.95, opacity: 0.5 }}
+                className="absolute top-0 left-0 w-full z-10"
+                initial={{ scale: 0.95, opacity: 0.8 }}
                 animate={{ scale: 1, opacity: 1, rotateZ: 0 }}
                 exit={{ 
                   x: exitX, 
