@@ -59,27 +59,27 @@ export default function BioSection({ isOpen, onClose }: BioSectionProps) {
             dragDirectionLock
             style={{ cursor: isDragging ? 'grabbing' : 'auto' }}
           >
-            <div className="pt-4 pb-2 px-4 relative">
+            <div className="pt-4 pb-2 px-4 relative flex items-center justify-between">
+              <div className="w-8 h-8">
+                {/* Empty div for spacing */}
+              </div>
               <motion.div 
-                className="w-16 h-1.5 bg-gray-300 rounded-full mx-auto cursor-grab active:cursor-grabbing"
+                className="w-16 h-1.5 bg-gray-300 rounded-full cursor-grab active:cursor-grabbing"
                 whileHover={{ scale: 1.1, backgroundColor: '#d1d5db' }}
                 whileTap={{ scale: 0.95 }}
               ></motion.div>
+              <motion.button
+                onClick={onClose}
+                className="w-8 h-8 flex items-center justify-center text-gray-700 hover:text-gray-900 transition-colors bg-white/80 backdrop-blur-sm rounded-full shadow-sm"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+              </motion.button>
             </div>
-            <motion.button
-              onClick={onClose}
-              className="absolute right-4 top-4 z-50 w-8 h-8 flex items-center justify-center text-gray-700 hover:text-gray-900 transition-colors bg-white/80 backdrop-blur-sm rounded-full shadow-sm"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ delay: 0.1 }}
-              layout
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
-            </motion.button>
             
             {isLoading ? (
-              <div className="pt-8 px-6 pb-6 space-y-6">
+              <div className="pt-6 px-6 pb-6 space-y-6">
                 <div className="h-6 bg-gray-200 rounded animate-pulse mb-3 w-1/3"></div>
                 <div className="h-24 bg-gray-200 rounded animate-pulse"></div>
                 <div className="h-6 bg-gray-200 rounded animate-pulse mb-3 w-1/3"></div>
@@ -88,7 +88,7 @@ export default function BioSection({ isOpen, onClose }: BioSectionProps) {
                 <div className="h-10 bg-gray-200 rounded animate-pulse"></div>
               </div>
             ) : (
-              <div className="pt-8 px-6 pb-6 overflow-y-auto max-h-[70vh]">
+              <div className="pt-6 px-6 pb-6 overflow-y-auto max-h-[70vh]">
                 {/* Profile Info */}
                 <div className="flex items-center gap-4 mb-6">
                   <div>
