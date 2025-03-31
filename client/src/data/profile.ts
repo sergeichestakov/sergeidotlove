@@ -13,12 +13,14 @@ export const profileData: Profile = {
   bio: "Hey there! I'm Sergei, a passionate software engineer and designer with a love for creating beautiful digital experiences. When I'm not coding, you'll find me hiking in the mountains, experimenting with photography, or trying out new coffee shops around the city. I believe in building products that make a positive impact and create meaningful connections.",
   interests: [
     "Coding",
-    "Photography",
-    "Hiking",
-    "UX Design",
     "Travel",
+    "Running",
+    "Reading",
+    "Biking",
     "Coffee",
-    "Music"
+    "Music",
+    "Lifting",
+    "Snowboarding"
   ],
   socialLinks: [
     {
