@@ -10,7 +10,7 @@ export const profileData: Profile = {
   birthdate: BIRTHDATE,
   age: calculateAge(BIRTHDATE), // Dynamically calculated
   profession: "Software Engineer at Startup",
-  bio: "Hey there! I'm Sergei, a passionate software engineer and designer with a love for creating beautiful digital experiences. When I'm not coding, you'll find me hiking in the mountains, experimenting with photography, or trying out new coffee shops around the city. I believe in building products that make a positive impact and create meaningful connections.",
+  bio: "Hi! I'm Sergei, a software engineer based in New York City. I'm originally from California and grew up in the Bay Area. When I'm not coding, you can find me working out, reading, traveling, or hanging with friends. I'm always looking to try new things and meet interesting people.",
   interests: [
     "Coding",
     "Travel",
