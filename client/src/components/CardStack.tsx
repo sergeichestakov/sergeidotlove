@@ -179,8 +179,10 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
   };
 
   // Calculate the next card index (for preview)
-  // Only show the next card preview if we're not in a transition
-  const nextIndex = !isTransitioning && currentIndex + 1 < photos.length ? currentIndex + 1 : null;
+  // Only show the next card preview if we're not in a transition AND no direction is set
+  // The direction check ensures we don't show the next card even during the brief delay between
+  // setting direction and updating isTransitioning
+  const nextIndex = !isTransitioning && !direction && currentIndex + 1 < photos.length ? currentIndex + 1 : null;
 
 
   return (
@@ -196,14 +198,14 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
         {currentIndex < photos.length ? (
           <>
             {/* Next card (background preview) - only show when not transitioning */}
-            {nextIndex !== null && (
-              <div 
-                className="absolute top-0 left-0 w-full scale-[0.92] -z-10 opacity-60"
-                style={{ pointerEvents: 'none' }}
-              >
-                <PhotoCard photo={photos[nextIndex]} disabled={true} />
-              </div>
-            )}
+            <div 
+              className={`absolute top-0 left-0 w-full scale-[0.92] -z-10 transition-opacity duration-300 ${
+                nextIndex !== null ? 'opacity-60' : 'opacity-0'
+              }`}
+              style={{ pointerEvents: 'none' }}
+            >
+              {nextIndex !== null && <PhotoCard photo={photos[nextIndex]} disabled={true} />}
+            </div>
             
             {/* Current card with exit animation */}
             <AnimatePresence initial={false} mode="wait">
