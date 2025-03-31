@@ -248,8 +248,8 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
               </button>
             </div>
             
-            {/* Photo indicators - positioned at the bottom of the card */}
-            <div className="absolute bottom-0 left-0 right-0 z-30">
+            {/* Photo indicators - positioned 4px from the bottom */}
+            <div className="absolute bottom-1 left-0 right-0 z-30">
               <div className="photo-indicators flex items-center justify-center space-x-1 mb-0">
                 {photos.map((_, index) => (
                   <div 
