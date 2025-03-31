@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { motion, AnimatePresence, PanInfo } from 'framer-motion';
+import { motion, AnimatePresence, PanInfo, TapInfo } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { Profile } from '@/types';
 
@@ -17,6 +17,13 @@ export default function BioSection({ isOpen, onClose }: BioSectionProps) {
   
   const handleOverlayClick = (e: React.MouseEvent) => {
     if (e.target === overlayRef.current) {
+      onClose();
+    }
+  };
+  
+  const handleTap = (_: MouseEvent | TouchEvent | PointerEvent, info: TapInfo) => {
+    // Only close if tapping on the overlay (not the content)
+    if (info.point.y < window.innerHeight - 100) {
       onClose();
     }
   };
@@ -43,22 +50,24 @@ export default function BioSection({ isOpen, onClose }: BioSectionProps) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={handleOverlayClick}
-          onTap={handleOverlayClick}
+          onTap={handleTap}
         >
           <motion.div
             className="w-full max-w-md bg-white rounded-t-3xl shadow-lg overflow-hidden"
             initial={{ y: '100%' }}
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
-            transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+            transition={{ type: 'spring', damping: 40, stiffness: 350 }}
             drag="y"
             dragConstraints={{ top: 0, bottom: 0 }}
-            dragElastic={0.6}
+            dragElastic={0.4}
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
             dragMomentum={false}
+            dragTransition={{ bounceStiffness: 500, bounceDamping: 25 }}
             dragDirectionLock
-            style={{ cursor: isDragging ? 'grabbing' : 'auto' }}
+            dragPropagation={false}
+            style={{ cursor: isDragging ? 'grabbing' : 'auto', touchAction: 'none' }}
           >
             <div className="pt-4 pb-3 px-4 relative flex items-center justify-center">
               <motion.div 
