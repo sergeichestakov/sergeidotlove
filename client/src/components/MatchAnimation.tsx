@@ -13,8 +13,8 @@ export default function MatchAnimation({ isVisible, onClose, matchedPhoto }: Mat
   
   useEffect(() => {
     if (isVisible) {
-      // Create confetti particles
-      const newConfetti = Array.from({ length: 100 }).map((_, i) => ({
+      // Create confetti particles - more particles for a better effect
+      const newConfetti = Array.from({ length: 150 }).map((_, i) => ({
         id: i,
         x: Math.random() * 100,
         y: Math.random() * 100,
@@ -26,10 +26,10 @@ export default function MatchAnimation({ isVisible, onClose, matchedPhoto }: Mat
       }));
       setConfetti(newConfetti);
       
-      // Auto-close after 4 seconds
+      // Auto-close after 6 seconds - longer to give user time to see the animation
       const timer = setTimeout(() => {
         onClose();
-      }, 4000);
+      }, 6000);
       
       return () => clearTimeout(timer);
     }
@@ -77,20 +77,35 @@ export default function MatchAnimation({ isVisible, onClose, matchedPhoto }: Mat
           {/* Match content */}
           <motion.div 
             className="bg-gradient-to-b from-primary to-primary/80 rounded-3xl p-6 w-full max-w-md text-center relative z-10"
-            initial={{ scale: 0.8, y: 20 }}
+            initial={{ scale: 0.5, y: 20 }}
             animate={{ scale: 1, y: 0 }}
-            transition={{ type: "spring", duration: 0.5, delay: 0.2 }}
+            transition={{ type: "spring", stiffness: 400, damping: 15, duration: 0.5, delay: 0.1 }}
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: [0.5, 1.2, 1] }}
-              transition={{ duration: 0.6, delay: 0.4 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
               className="mb-4"
             >
-              <h2 className="text-white text-4xl font-bold tracking-tight mb-2">
+              <motion.h2 
+                className="text-white text-5xl font-bold tracking-tight mb-2"
+                animate={{ 
+                  scale: [1, 1.05, 1],
+                  textShadow: [
+                    "0 0 5px rgba(255,255,255,0.5)",
+                    "0 0 15px rgba(255,255,255,0.8)",
+                    "0 0 5px rgba(255,255,255,0.5)"
+                  ]
+                }}
+                transition={{ 
+                  duration: 1.5, 
+                  repeat: Infinity,
+                  repeatType: "reverse" 
+                }}
+              >
                 IT'S A MATCH!
-              </h2>
-              <div className="h-0.5 w-20 bg-white/30 mx-auto"></div>
+              </motion.h2>
+              <div className="h-0.5 w-32 bg-white/50 mx-auto"></div>
             </motion.div>
             
             <div className="flex items-center justify-center mb-6 mt-4">
@@ -157,12 +172,25 @@ export default function MatchAnimation({ isVisible, onClose, matchedPhoto }: Mat
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 1.2 }}
             >
-              <button 
+              <motion.button 
                 onClick={onClose}
-                className="bg-white text-primary font-bold rounded-full py-3 px-8 shadow-md hover:bg-opacity-90 transition-colors"
+                className="bg-white text-primary font-bold rounded-full py-3 px-8 shadow-lg hover:bg-opacity-90 transition-colors"
+                whileHover={{ 
+                  scale: 1.05,
+                  boxShadow: "0px 8px 15px rgba(0, 0, 0, 0.2)"
+                }}
+                whileTap={{ scale: 0.95 }}
+                animate={{
+                  y: [0, -3, 0],
+                }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  repeatType: "reverse"
+                }}
               >
                 KEEP SWIPING
-              </button>
+              </motion.button>
             </motion.div>
           </motion.div>
         </motion.div>

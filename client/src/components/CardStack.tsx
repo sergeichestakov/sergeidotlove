@@ -77,14 +77,24 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
       const timer = setTimeout(() => {
         // Check if we're at the last photo
         if (currentIndex === photos.length - 1) {
-          // If swiping right, show a match
+          // If swiping right on the last card, show match animation
           if (direction === 'right') {
+            // Set the match as shown
             setShowMatch(true);
+            
+            // Wait for match animation to be visible before moving to final screen
+            // This longer delay ensures match animation stays visible
+            setTimeout(() => {
+              // Don't move to the next screen yet - the match screen will handle this
+              // The close handler for the match screen will move to photos.length
+              console.log("Match animation shown, waiting for user interaction");
+            }, 300);
+          } else {
+            // If swiping left on the last card, just move to the end screen immediately
+            setCurrentIndex(photos.length);
           }
-          // In either case, set the index to the end to show the completion screen
-          setCurrentIndex(photos.length);
         } else {
-          // Normal increment for other photos
+          // Normal increment for photos that aren't the last one
           setCurrentIndex(prev => prev + 1);
         }
         
@@ -115,12 +125,26 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
       setLastMatchedPhoto(photos[currentIndex]);
     }
     
-    setDirection("right");
-    setExitX(200);
-    setIsTransitioning(true);
-    
-    // Only show match on the last card
-    // The match is shown in useEffect after the card transition
+    // Special handling for the last card
+    if (currentIndex === photos.length - 1) {
+      console.log("Last card, showing match immediately");
+      setDirection("right");
+      setExitX(200);
+      setIsTransitioning(true);
+      
+      // For the last card, show the match animation immediately
+      // This ensures it's visible before moving to completion screen
+      const timer = setTimeout(() => {
+        setShowMatch(true);
+      }, 300);
+      
+      return () => clearTimeout(timer);
+    } else {
+      // Normal swiping for other cards
+      setDirection("right");
+      setExitX(200);
+      setIsTransitioning(true);
+    }
   };
 
   const handleRestart = () => {
