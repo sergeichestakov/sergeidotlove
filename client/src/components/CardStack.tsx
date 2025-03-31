@@ -97,7 +97,7 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
             )}
             
             {/* Swipe buttons */}
-            <div className="swipe-buttons absolute -bottom-28 left-0 right-0 flex justify-center items-center space-x-4 z-10 mt-8">
+            <div className="swipe-buttons absolute -bottom-32 left-0 right-0 flex justify-center items-center space-x-4 z-10 mt-8">
               <button 
                 onClick={handleSwipeLeft}
                 className="w-14 h-14 flex items-center justify-center bg-white text-destructive rounded-full shadow-lg hover:bg-destructive hover:text-white transition-colors"
@@ -119,7 +119,7 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
             </div>
             
             {/* Photo indicators */}
-            <div className="absolute -bottom-8 left-0 right-0">
+            <div className="absolute -bottom-12 left-0 right-0">
               <div className="photo-indicators flex items-center justify-center space-x-1 my-4">
                 {photos.map((_, index) => (
                   <div 

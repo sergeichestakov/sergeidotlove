@@ -14,7 +14,7 @@ export const stockPhotos: Photo[] = [
     type: "portrait",
     name: "Sergei",
     age: currentAge,
-    profession: "Software Engineer & Designer"
+    profession: "Software Engineer at Startup"
   },
   {
     id: 2,
@@ -23,7 +23,7 @@ export const stockPhotos: Photo[] = [
     type: "portrait",
     name: "Sergei",
     age: currentAge,
-    profession: "Software Engineer & Designer"
+    profession: "Software Engineer at Startup"
   },
   {
     id: 3,
@@ -32,7 +32,7 @@ export const stockPhotos: Photo[] = [
     type: "portrait",
     name: "Sergei",
     age: currentAge,
-    profession: "Software Engineer & Designer"
+    profession: "Software Engineer at Startup"
   },
   {
     id: 4,
@@ -41,7 +41,7 @@ export const stockPhotos: Photo[] = [
     type: "portrait",
     name: "Sergei",
     age: currentAge,
-    profession: "Software Engineer & Designer"
+    profession: "Software Engineer at Startup"
   },
   {
     id: 5,
@@ -50,7 +50,7 @@ export const stockPhotos: Photo[] = [
     type: "portrait",
     name: "Sergei",
     age: currentAge,
-    profession: "Software Engineer & Designer"
+    profession: "Software Engineer at Startup"
   },
   {
     id: 6,
@@ -59,7 +59,7 @@ export const stockPhotos: Photo[] = [
     type: "portrait",
     name: "Sergei",
     age: currentAge,
-    profession: "Software Engineer & Designer"
+    profession: "Software Engineer at Startup"
   },
   {
     id: 7,
@@ -68,7 +68,7 @@ export const stockPhotos: Photo[] = [
     type: "portrait",
     name: "Sergei",
     age: currentAge,
-    profession: "Software Engineer & Designer"
+    profession: "Software Engineer at Startup"
   },
   {
     id: 8,
@@ -77,7 +77,7 @@ export const stockPhotos: Photo[] = [
     type: "portrait",
     name: "Sergei",
     age: currentAge,
-    profession: "Software Engineer & Designer"
+    profession: "Software Engineer at Startup"
   },
 
   // Casual lifestyle photos
