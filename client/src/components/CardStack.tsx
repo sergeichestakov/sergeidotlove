@@ -96,12 +96,10 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
   const handleSwipeLeft = () => {
     if (isTransitioning || showingError) return; // Prevent multiple transitions
     
-    // Set flags first to prevent flashing
-    setShowingError(true);
-    setIsTransitioning(true);
-    
     // Start the "reject" animation
     setExitX(-200);
+    setIsTransitioning(true);
+    setShowingError(true);
     
     // Show error toast after a short delay
     setTimeout(() => {
@@ -112,18 +110,13 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
         duration: 1000, // 1 second duration
       });
       
-      // Animate the card back to center (triggers re-render with the key change)
+      // Animate the card back to center
       setExitX(0);
       
-      // Reset transitioning state but keep error state active a bit longer
-      // This prevents the next card from showing prematurely
+      // Reset states after animation completes
       setTimeout(() => {
         setIsTransitioning(false);
-        
-        // Final reset of error state after a delay to ensure smooth animation
-        setTimeout(() => {
-          setShowingError(false);
-        }, 100);
+        setShowingError(false);
       }, 300);
     }, 300);
   };
@@ -186,8 +179,8 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
   };
 
   // Calculate the next card index (for preview)
-  // Only show the next card preview if we're not in a transition and not showing error
-  const nextIndex = !isTransitioning && !showingError && currentIndex + 1 < photos.length ? currentIndex + 1 : null;
+  // Only show the next card preview if we're not in a transition
+  const nextIndex = !isTransitioning && currentIndex + 1 < photos.length ? currentIndex + 1 : null;
 
 
   return (
@@ -215,18 +208,13 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
             {/* Current card with exit animation */}
             <AnimatePresence initial={false} mode="wait">
               <motion.div 
-                key={`${currentIndex}-${showingError ? 'error' : 'normal'}`}
+                key={currentIndex}
                 className="absolute top-0 left-0 w-full z-10"
                 initial={{ scale: 0.95, opacity: 0.8 }}
-                animate={{ 
-                  scale: 1, 
-                  opacity: 1, 
-                  rotateZ: 0,
-                  x: 0 // Reset position when returning from error state
-                }}
+                animate={{ scale: 1, opacity: 1, rotateZ: 0 }}
                 exit={{ 
                   x: exitX, 
-                  opacity: showingError ? 1 : 0, // Keep opacity during error animation
+                  opacity: 0, 
                   rotate: exitX > 0 ? 30 : -30,
                   transition: { duration: 0.3 }
                 }}
