@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Photo } from '@/types';
 
@@ -9,6 +9,7 @@ interface PhotoCardProps {
 
 export default function PhotoCard({ photo, disabled = false }: PhotoCardProps) {
   const [dragAmount, setDragAmount] = useState({ x: 0, y: 0 });
+  const [imageLoaded, setImageLoaded] = useState(false);
   
   // Calculate rotation based on drag amount
   const calculateRotation = (x: number) => {
@@ -19,15 +20,34 @@ export default function PhotoCard({ photo, disabled = false }: PhotoCardProps) {
   const showLikeBadge = dragAmount.x > 50;
   const showNopeBadge = dragAmount.x < -50;
 
+  // Preload the image to avoid alt text flash
+  useEffect(() => {
+    const img = new Image();
+    img.onload = () => setImageLoaded(true);
+    img.src = photo.src;
+    
+    // If the image is already in browser cache, it might load immediately
+    if (img.complete) {
+      setImageLoaded(true);
+    }
+  }, [photo.src]);
+
   return (
     <div className="bg-white rounded-2xl shadow-lg overflow-hidden select-none">
       <div className="relative pb-[140%]">
+        {/* Show a skeleton loader while image is loading */}
+        {!imageLoaded && (
+          <div className="absolute inset-0 w-full h-full bg-gray-200 animate-pulse"></div>
+        )}
+        
+        {/* Hide the image and alt text until loaded */}
         <img
           src={photo.src}
           alt={photo.alt}
-          className="absolute inset-0 w-full h-full object-cover"
+          className={`absolute inset-0 w-full h-full object-cover ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
           draggable="false"
         />
+        
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-black/50"></div>
         
         {/* Like Badge */}

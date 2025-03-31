@@ -94,21 +94,27 @@ export default function MatchAnimation({ isVisible, onClose, matchedPhoto }: Mat
             </motion.div>
             
             <div className="flex items-center justify-center mb-6 mt-4">
-              {matchedPhoto && (
-                <motion.div
-                  initial={{ x: -50, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  transition={{ duration: 0.5, delay: 0.6 }}
-                  className="w-28 h-28 rounded-full overflow-hidden border-4 border-white shadow-lg"
-                >
-                  <img 
-                    src={matchedPhoto.src} 
-                    alt={matchedPhoto.alt} 
-                    className="w-full h-full object-cover"
-                  />
-                </motion.div>
-              )}
+              {/* "You" generic avatar */}
+              <motion.div
+                initial={{ x: -50, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+                className="w-28 h-28 rounded-full overflow-hidden border-4 border-white shadow-lg bg-gray-100 relative"
+              >
+                {/* Generic user avatar */}
+                <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-14 w-14 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                </div>
+                {/* "You" text */}
+                <div className="absolute bottom-0 left-0 right-0 bg-gray-800/70 py-1 text-white text-center text-sm font-medium">
+                  You
+                </div>
+              </motion.div>
               
+              {/* Heart icon */}
               <motion.div 
                 initial={{ scale: 0, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
@@ -120,18 +126,21 @@ export default function MatchAnimation({ isVisible, onClose, matchedPhoto }: Mat
                 </svg>
               </motion.div>
               
-              <motion.div
-                initial={{ x: 50, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.6 }}
-                className="w-28 h-28 rounded-full overflow-hidden border-4 border-white shadow-lg"
-              >
-                <img 
-                  src={matchedPhoto?.src || ""} 
-                  alt={matchedPhoto?.alt || "You"} 
-                  className="w-full h-full object-cover"
-                />
-              </motion.div>
+              {/* Matched person's photo */}
+              {matchedPhoto && (
+                <motion.div
+                  initial={{ x: 50, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 0.6 }}
+                  className="w-28 h-28 rounded-full overflow-hidden border-4 border-white shadow-lg"
+                >
+                  <img 
+                    src={matchedPhoto.src} 
+                    alt={matchedPhoto.alt} 
+                    className="w-full h-full object-cover"
+                  />
+                </motion.div>
+              )}
             </div>
             
             <motion.p 
