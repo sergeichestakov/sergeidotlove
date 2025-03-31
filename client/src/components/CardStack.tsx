@@ -107,6 +107,7 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
         variant: "destructive",
         title: "Sorry, something went wrong",
         description: "Please try again later.",
+        duration: 1000, // 1 second duration
       });
       
       // Animate the card back to center
