@@ -69,7 +69,7 @@ export default function BioSection({ isOpen, onClose }: BioSectionProps) {
             dragPropagation={false}
             style={{ cursor: isDragging ? 'grabbing' : 'auto', touchAction: 'none' }}
           >
-            <div className="pt-4 pb-3 px-4 relative flex items-center justify-center">
+            <div className="pt-3 pb-2 px-4 relative flex items-center justify-center">
               <motion.div 
                 className="w-20 h-1.5 bg-gray-300 rounded-full cursor-grab active:cursor-grabbing"
                 whileHover={{ scale: 1.1, backgroundColor: '#d1d5db' }}
@@ -87,15 +87,12 @@ export default function BioSection({ isOpen, onClose }: BioSectionProps) {
                 <div className="h-10 bg-gray-200 rounded animate-pulse"></div>
               </div>
             ) : (
-              <div className="pt-6 px-6 pb-6 overflow-y-auto max-h-[70vh]">
+              <div className="pt-4 px-6 pb-6 overflow-y-auto max-h-[70vh]">
                 {/* Profile Info */}
                 <div className="flex items-center gap-4 mb-6">
                   <div>
                     <h3 className="text-2xl font-bold">{profile?.name}, {profile?.age}</h3>
                     <p className="text-gray-600">{profile?.profession}</p>
-                    <p className="text-gray-500 text-sm mt-1">
-                      Born on {profile?.birthdate && new Date(profile.birthdate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
-                    </p>
                   </div>
                 </div>
                 
@@ -108,31 +105,13 @@ export default function BioSection({ isOpen, onClose }: BioSectionProps) {
                 </div>
                 
                 {/* Interests section */}
-                <div className="mb-6">
+                <div>
                   <h3 className="text-xl font-semibold font-poppins mb-3">Interests</h3>
                   <div className="flex flex-wrap gap-2">
                     {profile?.interests.map((interest, index) => (
                       <span key={index} className="px-3 py-1 bg-gray-100 rounded-full text-sm">
                         {interest}
                       </span>
-                    ))}
-                  </div>
-                </div>
-                
-                {/* Contact section */}
-                <div>
-                  <h3 className="text-xl font-semibold font-poppins mb-3">Get In Touch</h3>
-                  <div className="flex space-x-4">
-                    {profile?.socialLinks.map((link, index) => (
-                      <a 
-                        key={index}
-                        href={link.url} 
-                        className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <i className={link.icon}></i>
-                      </a>
                     ))}
                   </div>
                 </div>
