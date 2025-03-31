@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useRef, useState } from 'react';
+import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { Profile } from '@/types';
 
@@ -10,12 +10,25 @@ interface BioSectionProps {
 
 export default function BioSection({ isOpen, onClose }: BioSectionProps) {
   const overlayRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
   const { data: profile, isLoading } = useQuery<Profile>({
     queryKey: ['/api/profile'],
   });
   
   const handleOverlayClick = (e: React.MouseEvent) => {
     if (e.target === overlayRef.current) {
+      onClose();
+    }
+  };
+  
+  const handleDragStart = () => {
+    setIsDragging(true);
+  };
+  
+  const handleDragEnd = (_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    setIsDragging(false);
+    // If the user drags down more than 50px, close the modal
+    if (info.offset.y > 50) {
       onClose();
     }
   };
@@ -37,16 +50,32 @@ export default function BioSection({ isOpen, onClose }: BioSectionProps) {
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
             transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+            drag="y"
+            dragConstraints={{ top: 0, bottom: 0 }}
+            dragElastic={0.6}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+            dragMomentum={false}
+            dragDirectionLock
+            style={{ cursor: isDragging ? 'grabbing' : 'auto' }}
           >
-            <div className="pt-4 pb-2 px-4 flex justify-between items-center">
-              <div className="w-12 h-1 bg-gray-300 rounded-full mx-auto"></div>
-              <button
-                onClick={onClose}
-                className="absolute right-4 top-4 w-8 h-8 flex items-center justify-center text-gray-700 hover:text-gray-900"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
-              </button>
+            <div className="pt-4 pb-2 px-4 relative">
+              <motion.div 
+                className="w-16 h-1.5 bg-gray-300 rounded-full mx-auto cursor-grab active:cursor-grabbing"
+                whileHover={{ scale: 1.1, backgroundColor: '#d1d5db' }}
+                whileTap={{ scale: 0.95 }}
+              ></motion.div>
             </div>
+            <motion.button
+              onClick={onClose}
+              className="fixed right-4 top-4 z-50 w-8 h-8 flex items-center justify-center text-gray-700 hover:text-gray-900 transition-colors bg-white/80 backdrop-blur-sm rounded-full"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ delay: 0.1 }}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+            </motion.button>
             
             {isLoading ? (
               <div className="pt-8 px-6 pb-6 space-y-6">
