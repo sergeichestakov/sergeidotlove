@@ -19,7 +19,8 @@ export default function Home() {
       <header className="p-4 flex items-center justify-between">
         <h1 className="text-2xl font-bold font-poppins">
           <span className="text-primary">sergei</span>
-          <span className="text-foreground">.love</span>
+          <span className="text-red-500 mx-0.5 animate-pulse">♥</span>
+          <span className="text-foreground">love</span>
         </h1>
         <a 
           href="https://sergei.com" 
