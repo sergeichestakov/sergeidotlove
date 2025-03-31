@@ -20,6 +20,8 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
   const [exitX, setExitX] = useState<number>(0);
   const [showMatch, setShowMatch] = useState(false);
   const [lastMatchedPhoto, setLastMatchedPhoto] = useState<Photo | null>(null);
+  // Track whether a card is currently being swiped out
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   const handleDragEnd = (_e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     if (info.offset.x > 100) {
@@ -28,11 +30,15 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
         setLastMatchedPhoto(photos[currentIndex]);
       }
       
+      // Set transitioning state immediately to hide the background card
+      setIsTransitioning(true);
       setDirection("right");
       setExitX(200);
       
       // Match is handled in useEffect
     } else if (info.offset.x < -100) {
+      // Set transitioning state immediately to hide the background card
+      setIsTransitioning(true);
       setDirection("left");
       setExitX(-200);
     }
@@ -40,6 +46,9 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
 
   useEffect(() => {
     if (direction) {
+      // Set transitioning to true to prevent showing the next card too early
+      setIsTransitioning(true);
+      
       const timer = setTimeout(() => {
         // Check if we're at the last photo
         if (currentIndex === photos.length - 1) {
@@ -54,12 +63,20 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
           setCurrentIndex(prev => prev + 1);
         }
         setDirection(null);
+        
+        // Add a small delay before allowing next card to be visible
+        setTimeout(() => {
+          setIsTransitioning(false);
+        }, 50);
       }, 300);
+      
       return () => clearTimeout(timer);
     }
   }, [direction, photos.length, currentIndex]);
 
   const handleSwipeLeft = () => {
+    // Set transitioning state immediately to hide the background card
+    setIsTransitioning(true);
     setDirection("left");
     setExitX(-200);
   };
@@ -70,6 +87,8 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
       setLastMatchedPhoto(photos[currentIndex]);
     }
     
+    // Set transitioning state immediately to hide the background card
+    setIsTransitioning(true);
     setDirection("right");
     setExitX(200);
     
@@ -78,7 +97,11 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
   };
 
   const handleRestart = () => {
+    // Reset all states when restarting
     setCurrentIndex(0);
+    setDirection(null);
+    setExitX(0);
+    setIsTransitioning(false);
   };
 
   if (isLoading) {
@@ -129,13 +152,16 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
               </motion.div>
             </AnimatePresence>
             
-            {/* Background cards effect */}
-            {photos.length > currentIndex + 1 && (
-              <div 
+            {/* Background cards effect - only show when not in transition */}
+            {photos.length > currentIndex + 1 && !isTransitioning && (
+              <motion.div 
                 className="absolute top-2 left-0 w-full scale-95 opacity-60 z-[-1]"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.6 }}
+                transition={{ duration: 0.2 }}
               >
                 <PhotoCard photo={photos[(currentIndex + 1) % photos.length]} disabled />
-              </div>
+              </motion.div>
             )}
             
             {/* Swipe buttons */}
