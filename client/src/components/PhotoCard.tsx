@@ -79,7 +79,7 @@ export default function PhotoCard({ photo, disabled = false, className = '' }: P
 
   return (
     <div className={`bg-white rounded-2xl shadow-lg overflow-hidden select-none ${className}`}>
-      <div className="relative pb-[130%] md:pb-[140%]">
+      <div className="relative pb-[140%]">
         {/* Show a skeleton loader while image is loading */}
         {!imageLoaded && (
           <div className="absolute inset-0 w-full h-full bg-gray-200 animate-pulse"></div>
@@ -97,7 +97,7 @@ export default function PhotoCard({ photo, disabled = false, className = '' }: P
         
         {/* Like Badge */}
         <motion.div
-          className="absolute top-[10%] right-[10%] text-success border-4 border-success font-bold uppercase py-1 px-3 rounded-md transform -rotate-30 z-20 text-sm md:text-base"
+          className="absolute top-[10%] right-[10%] text-success border-4 border-success font-bold uppercase py-1 px-3 rounded-md transform -rotate-30 z-20"
           initial={{ opacity: 0 }}
           animate={{ opacity: showLikeBadge ? 1 : 0 }}
           style={{ rotate: -30 }}
@@ -107,7 +107,7 @@ export default function PhotoCard({ photo, disabled = false, className = '' }: P
         
         {/* Nope Badge */}
         <motion.div
-          className="absolute top-[10%] left-[10%] text-destructive border-4 border-destructive font-bold uppercase py-1 px-3 rounded-md transform rotate-30 z-20 text-sm md:text-base"
+          className="absolute top-[10%] left-[10%] text-destructive border-4 border-destructive font-bold uppercase py-1 px-3 rounded-md transform rotate-30 z-20"
           initial={{ opacity: 0 }}
           animate={{ opacity: showNopeBadge ? 1 : 0 }}
           style={{ rotate: 30 }}
@@ -116,9 +116,9 @@ export default function PhotoCard({ photo, disabled = false, className = '' }: P
         </motion.div>
         
         {/* Photo info */}
-        <div className="absolute bottom-0 left-0 w-full p-3 md:p-4 text-white">
-          <h2 className="text-xl md:text-2xl font-bold font-poppins">{photo.name}, {photo.age}</h2>
-          <p className="text-xs md:text-sm opacity-90">{photo.profession}</p>
+        <div className="absolute bottom-0 left-0 w-full p-4 text-white">
+          <h2 className="text-2xl font-bold font-poppins">{photo.name}, {photo.age}</h2>
+          <p className="text-sm opacity-90">{photo.profession}</p>
         </div>
       </div>
     </div>
