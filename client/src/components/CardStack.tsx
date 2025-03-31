@@ -254,7 +254,7 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
             </div>
             
             {/* Photo indicators */}
-            <div className="absolute -bottom-12 left-0 right-0">
+            <div className="absolute -bottom-12 left-0 right-0 z-30">
               <div className="photo-indicators flex items-center justify-center space-x-1 my-4">
                 {photos.map((_, index) => (
                   <div 
