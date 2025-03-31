@@ -27,8 +27,8 @@ export default function BioSection({ isOpen, onClose }: BioSectionProps) {
   
   const handleDragEnd = (_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     setIsDragging(false);
-    // If the user drags down more than 50px, close the modal
-    if (info.offset.y > 50) {
+    // If the user drags down more than 80px or with velocity greater than 500, close the modal
+    if (info.offset.y > 80 || (info.velocity.y > 500 && info.offset.y > 20)) {
       onClose();
     }
   };
@@ -68,11 +68,12 @@ export default function BioSection({ isOpen, onClose }: BioSectionProps) {
             </div>
             <motion.button
               onClick={onClose}
-              className="fixed right-4 top-4 z-50 w-8 h-8 flex items-center justify-center text-gray-700 hover:text-gray-900 transition-colors bg-white/80 backdrop-blur-sm rounded-full"
+              className="absolute right-4 top-4 z-50 w-8 h-8 flex items-center justify-center text-gray-700 hover:text-gray-900 transition-colors bg-white/80 backdrop-blur-sm rounded-full shadow-sm"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ delay: 0.1 }}
+              layout
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
             </motion.button>
