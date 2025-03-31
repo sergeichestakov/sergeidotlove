@@ -51,67 +51,57 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
     prevIndexRef.current = currentIndex;
   }, [currentIndex]);
 
+  // Simplified: Handle card being dragged and released
   const handleDragEnd = (_e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     if (isTransitioning) return; // Prevent multiple transitions
 
     if (info.offset.x > 100) {
-      // Store the current photo before swiping
-      if (photos[currentIndex]) {
-        setLastMatchedPhoto(photos[currentIndex]);
-      }
-      
-      setDirection("right");
-      setExitX(200);
-      setIsTransitioning(true);
-      
-      // Special case: immediately trigger match if this is the last card and swiped right
+      // Swiped right
       if (currentIndex === photos.length - 1) {
-        console.log("Last card drag-swiped right - showing match!");
-        // Directly show match, don't wait for useEffect to handle it
+        // Last card - trigger match directly
+        console.log("Last card swiped right via DRAG - showing match!");
+        if (photos[currentIndex]) {
+          setLastMatchedPhoto(photos[currentIndex]);
+        }
+        
+        // Apply animation first (extra large for dramatic effect)
+        setExitX(1000); 
+        setIsTransitioning(true);
+        
+        // Wait a moment for card animation, then show match
         setTimeout(() => {
-          setShowMatch(true);
-          // Directly jump to end screen instead of waiting for useEffect
-          setTimeout(() => {
-            setCurrentIndex(photos.length);
-            setIsTransitioning(false);
-          }, 400);
-        }, 400);
+          setShowMatch(true); // Show match animation
+          setCurrentIndex(photos.length); // Move to end screen behind the scenes
+          setIsTransitioning(false);
+        }, 300);
+      } else {
+        // Normal right swipe
+        setDirection("right");
+        setExitX(200);
+        setIsTransitioning(true);
       }
     } else if (info.offset.x < -100) {
+      // Swiped left
       setDirection("left");
       setExitX(-200);
       setIsTransitioning(true);
     }
   };
 
-  // Handles what happens after a swipe (direction is set)
+  // Handles what happens after a normal swipe (direction is set)
+  // Special cases for the last card are handled directly in handleDragEnd and handleSwipeRight
   useEffect(() => {
     if (!direction) return; // Only run when a direction is set (after swipe)
     
     // Short delay to allow the card exit animation to start
     const timer = setTimeout(() => {
-      // Special case: last photo + swipe right = match!
-      if (currentIndex === photos.length - 1 && direction === 'right') {
-        console.log("Last card swiped right - showing match!");
-        // Ensure we have a photo to show in the match screen
-        if (photos[currentIndex]) {
-          setLastMatchedPhoto(photos[currentIndex]);
-        }
-        // Show match after a slight delay to allow exit animation
-        setTimeout(() => {
-          setShowMatch(true);
-        }, 300);
-        // Don't increment currentIndex yet - we'll let the match screen close handler do it
-      } 
-      // All other cases: go to next card or end screen
-      else {
-        if (currentIndex === photos.length - 1) {
-          // Last card swiped left - go to end screen
-          setCurrentIndex(photos.length);
-        } else {
-          // Normal case - go to next card
-          setCurrentIndex(prev => prev + 1);
-        }
+      // Process normal card transitions
+      if (currentIndex === photos.length - 1) {
+        // Last card swiped left - go to end screen
+        setCurrentIndex(photos.length);
+      } else {
+        // Normal case - go to next card
+        setCurrentIndex(prev => prev + 1);
       }
       
       // Reset swipe state with slight delay to allow animations
@@ -132,30 +122,38 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
     setIsTransitioning(true);
   };
 
+  // Handle clicking the "like" button
   const handleSwipeRight = () => {
     if (isTransitioning) return; // Prevent multiple transitions
     
-    // Store the current photo before swiping
-    if (photos[currentIndex]) {
-      setLastMatchedPhoto(photos[currentIndex]);
-    }
-    
-    // Set common swipe states regardless of index
-    setDirection("right");
-    setExitX(200);
-    setIsTransitioning(true);
-    
-    // Special case: immediately trigger match if this is the last card
+    // Special case: last card - trigger match
     if (currentIndex === photos.length - 1) {
-      console.log("Last card button-swiped right - showing match!");
+      console.log("Last card swiped right via BUTTON - showing match!");
+      
+      // Store photo for match screen
+      if (photos[currentIndex]) {
+        setLastMatchedPhoto(photos[currentIndex]);
+      }
+      
+      // Apply animation first (extra large for dramatic effect)
+      setExitX(1000);
+      setIsTransitioning(true);
+      
+      // Wait for card to animate out, then show match
       setTimeout(() => {
-        setShowMatch(true);
-        // Directly jump to end screen
-        setTimeout(() => {
-          setCurrentIndex(photos.length);
-          setIsTransitioning(false);
-        }, 400);
-      }, 400);
+        setShowMatch(true); // Show match animation
+        setCurrentIndex(photos.length); // Move to end screen behind the scenes
+        setIsTransitioning(false);
+      }, 300);
+    } else {
+      // Normal card - regular behavior
+      if (photos[currentIndex]) {
+        setLastMatchedPhoto(photos[currentIndex]);
+      }
+      
+      setDirection("right");
+      setExitX(200);
+      setIsTransitioning(true);
     }
   };
 
