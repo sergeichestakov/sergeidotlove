@@ -3,6 +3,7 @@ import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { Photo } from "@/types";
 import PhotoCard from "./PhotoCard";
+import MatchAnimation from "./MatchAnimation";
 import { cn } from "@/lib/utils";
 
 interface CardStackProps {
@@ -17,11 +18,28 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState<string | null>(null);
   const [exitX, setExitX] = useState<number>(0);
+  const [showMatch, setShowMatch] = useState(false);
+  const [lastMatchedPhoto, setLastMatchedPhoto] = useState<Photo | null>(null);
 
   const handleDragEnd = (_e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     if (info.offset.x > 100) {
+      // Store the current photo before swiping
+      if (photos[currentIndex]) {
+        setLastMatchedPhoto(photos[currentIndex]);
+      }
+      
       setDirection("right");
       setExitX(200);
+      
+      // 30% chance of match when swiping right
+      const isMatch = Math.random() < 0.3;
+      
+      // If it's the last card or a random match, show the match animation after a short delay
+      if (currentIndex === photos.length - 1 || isMatch) {
+        setTimeout(() => {
+          setShowMatch(true);
+        }, 500);
+      }
     } else if (info.offset.x < -100) {
       setDirection("left");
       setExitX(-200);
@@ -31,12 +49,20 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
   useEffect(() => {
     if (direction) {
       const timer = setTimeout(() => {
-        setCurrentIndex((prev) => (prev + 1) % photos.length);
+        // Check if we're at the last photo and swiping right
+        if (currentIndex === photos.length - 1 && direction === 'right') {
+          // Set the index but also show "It's a Match!" animation
+          setCurrentIndex(photos.length);
+          // We don't need to set showMatch here since it's already done in the swipe handlers
+        } else {
+          // Normal cycling through photos
+          setCurrentIndex((prev) => (prev + 1) % photos.length);
+        }
         setDirection(null);
       }, 300);
       return () => clearTimeout(timer);
     }
-  }, [direction, photos.length]);
+  }, [direction, photos.length, currentIndex]);
 
   const handleSwipeLeft = () => {
     setDirection("left");
@@ -44,8 +70,23 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
   };
 
   const handleSwipeRight = () => {
+    // Store the current photo before swiping
+    if (photos[currentIndex]) {
+      setLastMatchedPhoto(photos[currentIndex]);
+    }
+    
     setDirection("right");
     setExitX(200);
+    
+    // 30% chance of match when swiping right
+    const isMatch = Math.random() < 0.3;
+    
+    // If it's the last card or a random match, show the match animation after a short delay
+    if (currentIndex === photos.length - 1 || isMatch) {
+      setTimeout(() => {
+        setShowMatch(true);
+      }, 500);
+    }
   };
 
   const handleRestart = () => {
@@ -60,8 +101,19 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
     );
   }
 
+  const handleCloseMatch = () => {
+    setShowMatch(false);
+  };
+
   return (
     <div className="flex-1 flex flex-col items-center justify-start pt-4 pb-20 px-4 relative overflow-hidden">
+      {/* Match Animation */}
+      <MatchAnimation 
+        isVisible={showMatch} 
+        onClose={handleCloseMatch} 
+        matchedPhoto={lastMatchedPhoto} 
+      />
+      
       <div className="w-full max-w-sm relative h-[500px]">
         {currentIndex < photos.length ? (
           <>
