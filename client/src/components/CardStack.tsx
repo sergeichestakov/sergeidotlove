@@ -67,10 +67,15 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
       // Special case: immediately trigger match if this is the last card and swiped right
       if (currentIndex === photos.length - 1) {
         console.log("Last card drag-swiped right - showing match!");
-        // Short delay to let the card animate out first
+        // Directly show match, don't wait for useEffect to handle it
         setTimeout(() => {
           setShowMatch(true);
-        }, 300);
+          // Directly jump to end screen instead of waiting for useEffect
+          setTimeout(() => {
+            setCurrentIndex(photos.length);
+            setIsTransitioning(false);
+          }, 400);
+        }, 400);
       }
     } else if (info.offset.x < -100) {
       setDirection("left");
@@ -140,7 +145,18 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
     setExitX(200);
     setIsTransitioning(true);
     
-    // Only show match on the last card, but we'll handle this in the useEffect
+    // Special case: immediately trigger match if this is the last card
+    if (currentIndex === photos.length - 1) {
+      console.log("Last card button-swiped right - showing match!");
+      setTimeout(() => {
+        setShowMatch(true);
+        // Directly jump to end screen
+        setTimeout(() => {
+          setCurrentIndex(photos.length);
+          setIsTransitioning(false);
+        }, 400);
+      }, 400);
+    }
   };
 
   const handleRestart = () => {
