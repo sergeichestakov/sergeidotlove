@@ -5,6 +5,7 @@ import { Photo } from "@/types";
 import PhotoCard from "./PhotoCard";
 import MatchAnimation from "./MatchAnimation";
 import { cn } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
 
 interface CardStackProps {
   onInfoClick: () => void;
@@ -14,6 +15,7 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
   const { data: photos = [], isLoading } = useQuery<Photo[]>({
     queryKey: ['/api/photos'],
   });
+  const { toast } = useToast();
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState<string | null>(null);
@@ -22,6 +24,7 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
   const [lastMatchedPhoto, setLastMatchedPhoto] = useState<Photo | null>(null);
   const [imagesPreloaded, setImagesPreloaded] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [showingError, setShowingError] = useState(false);
   
   // Reference to track the previous index for animation purposes
   const prevIndexRef = useRef(currentIndex);
@@ -53,7 +56,7 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
 
   // Handle card being dragged and released
   const handleDragEnd = (_e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
-    if (isTransitioning) return; // Prevent multiple transitions
+    if (isTransitioning || showingError) return; // Prevent multiple transitions
 
     if (info.offset.x > 100) {
       // Swiped right - trigger the same logic as the like button
@@ -67,7 +70,7 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
   // Handles what happens after a normal swipe (direction is set)
   // Special cases for the last card are handled directly in handleDragEnd and handleSwipeRight
   useEffect(() => {
-    if (!direction) return; // Only run when a direction is set (after swipe)
+    if (!direction || showingError) return; // Only run when a direction is set (after swipe) and not in error mode
     
     // Short delay to allow the card exit animation to start
     const timer = setTimeout(() => {
@@ -88,14 +91,33 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
     }, 300); // Delay matches the card exit animation
     
     return () => clearTimeout(timer);
-  }, [direction, photos.length, currentIndex]);
+  }, [direction, photos.length, currentIndex, showingError]);
 
   const handleSwipeLeft = () => {
-    if (isTransitioning) return; // Prevent multiple transitions
+    if (isTransitioning || showingError) return; // Prevent multiple transitions
     
-    setDirection("left");
+    // Start the "reject" animation
     setExitX(-200);
     setIsTransitioning(true);
+    setShowingError(true);
+    
+    // Show error toast after a short delay
+    setTimeout(() => {
+      toast({
+        variant: "destructive",
+        title: "Sorry, something went wrong",
+        description: "Please try again later.",
+      });
+      
+      // Animate the card back to center
+      setExitX(0);
+      
+      // Reset states after animation completes
+      setTimeout(() => {
+        setIsTransitioning(false);
+        setShowingError(false);
+      }, 300);
+    }, 300);
   };
 
   // Handle clicking the "like" button
