@@ -183,30 +183,9 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
   // Only show the next card preview if we're not in a transition
   const nextIndex = !isTransitioning && currentIndex + 1 < photos.length ? currentIndex + 1 : null;
 
-  // Test/debug function to directly show the match animation
-  const handleTestMatch = () => {
-    if (photos.length > 0) {
-      console.log("Showing test match");
-      // Use current photo or first photo as fallback
-      const photoToShow = currentIndex < photos.length 
-        ? photos[currentIndex] 
-        : photos[0];
-      
-      setLastMatchedPhoto(photoToShow);
-      setShowMatch(true);
-    }
-  };
 
   return (
     <div className="flex-1 flex flex-col items-center justify-start pt-4 pb-20 px-4 relative overflow-hidden">
-      {/* Temporary debug button for testing */}
-      <button 
-        onClick={handleTestMatch}
-        className="absolute bottom-0 right-0 m-2 bg-red-600 text-white text-xs px-2 py-1 rounded z-50 opacity-90 hover:opacity-100"
-      >
-        TEST MATCH
-      </button>
-      
       {/* Match Animation */}
       <MatchAnimation 
         isVisible={showMatch} 
