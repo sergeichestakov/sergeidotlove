@@ -43,6 +43,7 @@ export default function BioSection({ isOpen, onClose }: BioSectionProps) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={handleOverlayClick}
+          onTap={handleOverlayClick}
         >
           <motion.div
             className="w-full max-w-md bg-white rounded-t-3xl shadow-lg overflow-hidden"
@@ -59,23 +60,12 @@ export default function BioSection({ isOpen, onClose }: BioSectionProps) {
             dragDirectionLock
             style={{ cursor: isDragging ? 'grabbing' : 'auto' }}
           >
-            <div className="pt-4 pb-2 px-4 relative flex items-center justify-between">
-              <div className="w-8 h-8">
-                {/* Empty div for spacing */}
-              </div>
+            <div className="pt-4 pb-3 px-4 relative flex items-center justify-center">
               <motion.div 
-                className="w-16 h-1.5 bg-gray-300 rounded-full cursor-grab active:cursor-grabbing"
+                className="w-20 h-1.5 bg-gray-300 rounded-full cursor-grab active:cursor-grabbing"
                 whileHover={{ scale: 1.1, backgroundColor: '#d1d5db' }}
                 whileTap={{ scale: 0.95 }}
               ></motion.div>
-              <motion.button
-                onClick={onClose}
-                className="w-8 h-8 flex items-center justify-center text-gray-700 hover:text-gray-900 transition-colors bg-white/80 backdrop-blur-sm rounded-full shadow-sm"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
-              </motion.button>
             </div>
             
             {isLoading ? (
