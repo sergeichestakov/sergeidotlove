@@ -13,7 +13,7 @@ interface CardStackProps {
 
 export default function CardStack({ onInfoClick }: CardStackProps) {
   const { data: photos = [], isLoading } = useQuery<Photo[]>({
-    queryKey: ['/api/photos'],
+    queryKey: ["/api/photos"],
   });
   const { toast } = useToast();
 
@@ -25,7 +25,7 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
   const [imagesPreloaded, setImagesPreloaded] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [showingError, setShowingError] = useState(false);
-  
+
   // Reference to track the previous index for animation purposes
   const prevIndexRef = useRef(currentIndex);
 
@@ -55,7 +55,10 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
   }, [currentIndex]);
 
   // Handle card being dragged and released
-  const handleDragEnd = (_e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+  const handleDragEnd = (
+    _e: MouseEvent | TouchEvent | PointerEvent,
+    info: PanInfo,
+  ) => {
     if (isTransitioning || showingError) return; // Prevent multiple transitions
 
     if (info.offset.x > 100) {
@@ -71,7 +74,7 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
   // Special cases for the last card are handled directly in handleDragEnd and handleSwipeRight
   useEffect(() => {
     if (!direction || showingError) return; // Only run when a direction is set (after swipe) and not in error mode
-    
+
     // Short delay to allow the card exit animation to start
     const timer = setTimeout(() => {
       // Process normal card transitions
@@ -80,27 +83,27 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
         setCurrentIndex(photos.length);
       } else {
         // Normal case - go to next card
-        setCurrentIndex(prev => prev + 1);
+        setCurrentIndex((prev) => prev + 1);
       }
-      
+
       // Reset swipe state with slight delay to allow animations
       setTimeout(() => {
         setDirection(null);
         setIsTransitioning(false);
       }, 100);
     }, 300); // Delay matches the card exit animation
-    
+
     return () => clearTimeout(timer);
   }, [direction, photos.length, currentIndex, showingError]);
 
   const handleSwipeLeft = () => {
     if (isTransitioning || showingError) return; // Prevent multiple transitions
-    
+
     // Start the "reject" animation
     setExitX(-200);
     setIsTransitioning(true);
     setShowingError(true);
-    
+
     // Show error toast after a short delay
     setTimeout(() => {
       toast({
@@ -109,10 +112,10 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
         description: "Please try again later.",
         duration: 1000, // 1 second duration
       });
-      
+
       // Animate the card back to center
       setExitX(0);
-      
+
       // Reset states after animation completes
       setTimeout(() => {
         setIsTransitioning(false);
@@ -124,20 +127,20 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
   // Handle clicking the "like" button
   const handleSwipeRight = () => {
     if (isTransitioning) return; // Prevent multiple transitions
-    
+
     // Special case: last card - trigger match
     if (currentIndex === photos.length - 1) {
       console.log("Last card swiped right via BUTTON - showing match!");
-      
+
       // Store photo for match screen
       if (photos[currentIndex]) {
         setLastMatchedPhoto(photos[currentIndex]);
       }
-      
+
       // Apply animation first (extra large for dramatic effect)
       setExitX(1000);
       setIsTransitioning(true);
-      
+
       // Wait for card to animate out, then show match
       setTimeout(() => {
         setShowMatch(true); // Show match animation
@@ -149,7 +152,7 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
       if (photos[currentIndex]) {
         setLastMatchedPhoto(photos[currentIndex]);
       }
-      
+
       setDirection("right");
       setExitX(200);
       setIsTransitioning(true);
@@ -182,43 +185,45 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
   // Only show the next card preview if we're not in a transition AND no direction is set
   // The direction check ensures we don't show the next card even during the brief delay between
   // setting direction and updating isTransitioning
-  const nextIndex = !isTransitioning && !direction && currentIndex + 1 < photos.length ? currentIndex + 1 : null;
-
+  const nextIndex =
+    !isTransitioning && !direction && currentIndex + 1 < photos.length
+      ? currentIndex + 1
+      : null;
 
   return (
     <div className="flex-1 flex flex-col items-center justify-start pb-16 sm:pb-20 px-4 relative overflow-hidden">
       {/* Match Animation */}
-      <MatchAnimation 
-        isVisible={showMatch} 
-        onClose={handleCloseMatch} 
-        matchedPhoto={lastMatchedPhoto} 
+      <MatchAnimation
+        isVisible={showMatch}
+        onClose={handleCloseMatch}
+        matchedPhoto={lastMatchedPhoto}
       />
-      
+
       <div className="w-full max-w-sm relative h-[480px] sm:h-[500px]">
         {currentIndex < photos.length ? (
           <>
             {/* Next card (background preview) - only show when not transitioning */}
-            <div 
-              className={`absolute top-0 left-0 w-full scale-[0.92] -z-10 transition-opacity duration-300 ${
-                nextIndex !== null ? 'opacity-60' : 'opacity-0'
-              }`}
-              style={{ pointerEvents: 'none' }}
+            <div
+              className={`absolute top-0 left-0 w-full scale-[0.92] -z-10 transition-opacity duration-300 opacity-0`}
+              style={{ pointerEvents: "none" }}
             >
-              {nextIndex !== null && <PhotoCard photo={photos[nextIndex]} disabled={true} />}
+              {nextIndex !== null && (
+                <PhotoCard photo={photos[nextIndex]} disabled={true} />
+              )}
             </div>
-            
+
             {/* Current card with exit animation */}
             <AnimatePresence initial={false} mode="wait">
-              <motion.div 
+              <motion.div
                 key={currentIndex}
                 className="absolute top-0 left-0 w-full z-10"
                 initial={{ scale: 0.95, opacity: 0.8 }}
                 animate={{ scale: 1, opacity: 1, rotateZ: 0 }}
-                exit={{ 
-                  x: exitX, 
-                  opacity: 0, 
+                exit={{
+                  x: exitX,
+                  opacity: 0,
                   rotate: exitX > 0 ? 30 : -30,
-                  transition: { duration: 0.3 }
+                  transition: { duration: 0.3 },
                 }}
                 drag={!isTransitioning ? "x" : false}
                 dragConstraints={{ left: 0, right: 0 }}
@@ -227,63 +232,105 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
                 whileDrag={{ scale: 1.05 }}
                 onDrag={(_, info) => {
                   // Update drag state for the badges in PhotoCard
-                  const currentCard = document.querySelector('.current-card');
+                  const currentCard = document.querySelector(".current-card");
                   if (currentCard) {
                     // Set custom attribute to communicate drag amount to PhotoCard
-                    currentCard.setAttribute('data-drag-x', info.offset.x.toString());
-                    
+                    currentCard.setAttribute(
+                      "data-drag-x",
+                      info.offset.x.toString(),
+                    );
+
                     // Show like/nope badges based on drag direction
                     if (info.offset.x > 50) {
-                      currentCard.classList.add('drag-right');
-                      currentCard.classList.remove('drag-left');
+                      currentCard.classList.add("drag-right");
+                      currentCard.classList.remove("drag-left");
                     } else if (info.offset.x < -50) {
-                      currentCard.classList.add('drag-left');
-                      currentCard.classList.remove('drag-right');
+                      currentCard.classList.add("drag-left");
+                      currentCard.classList.remove("drag-right");
                     } else {
-                      currentCard.classList.remove('drag-right', 'drag-left');
+                      currentCard.classList.remove("drag-right", "drag-left");
                     }
                   }
                 }}
               >
-                <PhotoCard photo={photos[currentIndex]} className="current-card" />
+                <PhotoCard
+                  photo={photos[currentIndex]}
+                  className="current-card"
+                />
               </motion.div>
             </AnimatePresence>
-            
+
             {/* Swipe buttons */}
             <div className="swipe-buttons absolute -bottom-24 md:-bottom-32 left-0 right-0 flex justify-center items-center space-x-3 md:space-x-4 z-10">
-              <button 
+              <button
                 onClick={handleSwipeLeft}
                 disabled={isTransitioning}
                 className="w-14 h-14 md:w-14 md:h-14 flex items-center justify-center bg-white text-destructive rounded-full shadow-lg hover:bg-destructive hover:text-white transition-colors disabled:opacity-50"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 md:h-6 md:w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 md:h-6 md:w-6"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M18 6 6 18"></path>
+                  <path d="m6 6 12 12"></path>
+                </svg>
               </button>
-              <button 
+              <button
                 onClick={onInfoClick}
                 className="w-12 h-12 md:w-12 md:h-12 flex items-center justify-center bg-white text-gray-700 rounded-full shadow-lg hover:bg-gray-600 hover:text-white transition-colors"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 md:h-6 md:w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 md:h-6 md:w-6"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <path d="M12 16v-4"></path>
+                  <path d="M12 8h.01"></path>
+                </svg>
               </button>
-              <button 
+              <button
                 onClick={handleSwipeRight}
                 disabled={isTransitioning}
                 className="w-14 h-14 md:w-14 md:h-14 flex items-center justify-center bg-white text-success rounded-full shadow-lg hover:bg-green-600 hover:text-white transition-colors disabled:opacity-50"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 md:h-6 md:w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 md:h-6 md:w-6"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                </svg>
               </button>
             </div>
-            
+
             {/* Photo indicators - positioned at the bottom of the card, 8px lower on md+ screens */}
             <div className="absolute bottom-0 md:-bottom-2 left-0 right-0 z-30">
               <div className="photo-indicators flex items-center justify-center space-x-1 mb-0">
                 {photos.map((_, index) => (
-                  <div 
+                  <div
                     key={index}
                     className={cn(
                       "photo-indicator h-1 rounded-full transition-all duration-300",
-                      index === currentIndex 
-                        ? "bg-white w-8" 
-                        : "bg-white/60 w-4"
+                      index === currentIndex
+                        ? "bg-white w-8"
+                        : "bg-white/60 w-4",
                     )}
                   />
                 ))}
@@ -292,13 +339,38 @@ export default function CardStack({ onInfoClick }: CardStackProps) {
           </>
         ) : (
           <div className="flex flex-col items-center justify-center text-center p-8 h-full bg-white rounded-2xl shadow-md">
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-16 h-16 text-primary mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
-            <h2 className="text-2xl font-bold font-poppins mb-6">That's all for now!</h2>
-            <button 
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-16 h-16 text-primary mb-4"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+            </svg>
+            <h2 className="text-2xl font-bold font-poppins mb-6">
+              That's all for now!
+            </h2>
+            <button
               onClick={handleRestart}
               className="bg-primary text-white font-medium rounded-full px-6 py-3 hover:bg-opacity-90 transition-colors flex items-center justify-center"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 mr-2"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                <path d="M3 3v5h5"></path>
+              </svg>
               Start Over
             </button>
           </div>
