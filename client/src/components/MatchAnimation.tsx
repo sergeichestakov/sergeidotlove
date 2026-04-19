@@ -165,22 +165,19 @@ export default function MatchAnimation({ isVisible, onClose, matchedPhoto }: Mat
                 href="https://date.sergei.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-yellow-400 text-gray-900 font-extrabold rounded-full py-4 px-10 shadow-xl text-lg tracking-wide hover:bg-yellow-300 transition-colors flex items-center gap-2"
+                className="bg-white text-primary font-bold rounded-full py-3 px-8 shadow-lg hover:bg-opacity-90 transition-colors flex items-center gap-2"
                 whileHover={{ 
-                  scale: 1.07,
-                  boxShadow: "0px 10px 25px rgba(0, 0, 0, 0.3)"
+                  scale: 1.05,
+                  boxShadow: "0px 8px 15px rgba(0, 0, 0, 0.2)"
                 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" className="inline-block">
-                  <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
-                </svg>
                 Date Sergei
               </motion.a>
               <motion.button 
                 onClick={onClose}
-                className="bg-white/20 text-white/80 font-medium rounded-full py-2 px-6 hover:bg-white/30 transition-colors text-sm"
-                whileHover={{ scale: 1.03 }}
+                className="bg-white/20 text-white/80 font-bold rounded-full py-3 px-8 shadow-lg hover:bg-white/30 transition-colors"
+                whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
                 KEEP SWIPING
